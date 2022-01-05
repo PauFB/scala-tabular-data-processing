@@ -10,6 +10,6 @@ class CounterVisitor extends VisitorTrait {
     result = dataFrame.count()
   }
 
-  override def getResult[T](): T = result.asInstanceOf[T]
+  override def getResult[T](): T = (this.fileCount + this.directoryCount).asInstanceOf[T]
 
 }

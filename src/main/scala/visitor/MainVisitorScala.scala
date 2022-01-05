@@ -5,7 +5,6 @@ import factory.DataFrame
 
 import java.util
 import scala.jdk.CollectionConverters._
-import java.util.{Arrays, List}
 
 object MainVisitorScala extends scala.App {
 
@@ -34,7 +33,10 @@ object MainVisitorScala extends scala.App {
   for (d <- list.asScala) {
     v = new CounterVisitor()
     d.accept(v)
-    println(v.getResult)
+    println("directoryCount: " + v.asInstanceOf[CounterVisitor].directoryCount)
+    println("fileCount: " + v.asInstanceOf[CounterVisitor].fileCount)
+    println("getResult: " + v.getResult)
+    println()
   }
 
 }

@@ -14,4 +14,8 @@ trait DataFrameTrait {
 
   def getContent(): java.util.LinkedList[java.util.ArrayList[String]]
 
+  def fileCount(): Int
+
+  def directoryCount(): Int
+
 }
