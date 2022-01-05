@@ -4,7 +4,7 @@ import factory.DataFrame;
 
 public interface Visitor {
 
-    void visit(DataFrame dataFrame, String label);
+    void visit(DataFrame dataFrame);
 
     Double getResult();
 

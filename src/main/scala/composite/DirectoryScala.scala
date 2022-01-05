@@ -122,7 +122,11 @@ class DirectoryScala() extends DataFrameTrait {
   def fileCount(): Int = {
     var result = 0
     for (child <- this.children.asScala) {
-      result += 1
+      if (child.isInstanceOf[FileScala]){
+        result +=1
+      } else {
+        result += child.fileCount()
+      }
     }
     return result
   }

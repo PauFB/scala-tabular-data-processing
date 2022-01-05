@@ -1,5 +1,10 @@
 package dataframe
 
+import factory.Data
+import visitor.VisitorTrait
+
+import java.util.function.Predicate
+
 trait DataFrameTrait {
 
   def at(id: Int, label: String): String
@@ -9,6 +14,8 @@ trait DataFrameTrait {
   def columns(): Int
 
   def size(): Int
+
+  def filter(label: String, pred: Predicate[String]): Data
 
   def getLabelList(): java.util.LinkedList[String]
 

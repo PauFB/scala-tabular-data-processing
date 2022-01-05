@@ -4,10 +4,15 @@ import factory.DataFrame;
 
 public class MaximumVisitor implements Visitor {
 
+    private String label;
     private Double result;
 
-    public void visit(DataFrame dataFrame, String label) {
-        result = dataFrame.max(label);
+    public MaximumVisitor(String label){
+        this.label = label;
+    }
+
+    public void visit(DataFrame dataFrame) {
+        this.result = dataFrame.max(this.label);
     }
 
     public Double getResult() {

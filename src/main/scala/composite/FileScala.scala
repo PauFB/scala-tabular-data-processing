@@ -35,7 +35,9 @@ class FileScala(filePath: String) extends DataFrameTrait {
     this.fileDataFrame.query(label, pred)
   }
 
-  override def count(): Int = 1
+  override def fileCount(): Int = 1
+
+  override def directoryCount(): Int = 0
 
   def accept(v: VisitorTrait): Unit = {
     v.visit(this)

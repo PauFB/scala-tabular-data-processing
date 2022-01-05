@@ -11,8 +11,8 @@ public class AverageVisitor implements Visitor {
         this.label = label;
     }
 
-    public void visit(DataFrame dataFrame, String label) {
-        result = dataFrame.average(label);
+    public void visit(DataFrame dataFrame) {
+        this.result = dataFrame.average(this.label);
     }
 
     public Double getResult() {

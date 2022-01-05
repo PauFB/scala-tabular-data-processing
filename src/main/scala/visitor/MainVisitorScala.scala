@@ -25,12 +25,12 @@ object MainVisitorScala extends scala.App {
   for (d <- list.asScala) {
     v = new FilterVisitor("SortOrder", x => Integer.parseInt(x) > 113);
     d.accept(v)
-    println(v.getResult)
+    println(v.getResult())
   }
 
   System.out.println("list1 CounterVisitor()")
 
-  for (d <- list.asScala) {
+  for (d <- list2.asScala) {
     v = new CounterVisitor()
     d.accept(v)
     println("directoryCount: " + v.asInstanceOf[CounterVisitor].directoryCount)

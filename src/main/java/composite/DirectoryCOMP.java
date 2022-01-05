@@ -39,11 +39,32 @@ public class DirectoryCOMP implements DataFrame {
     }
 
     public String at(int id, String label) {
-        return null;
+        LinkedList<String> labelList = this.getLabelList();
+        LinkedList<ArrayList<String>> content = new LinkedList<>();
+        Data data;
+        try {
+            for (int i = 0; i < this.getLabelList().size(); i++)
+                content.add(new ArrayList<>());
+            for (DataFrame child : children) {
+                for (int i = 0; i < labelList.size(); i++) {
+                    content.get(i).addAll(child.getContent().get(i));
+                }
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        data = new Data(labelList, content);
+        return data.at(id, label);
     }
 
     public String iat(int i, int j) {
-        return null;
+        LinkedList<ArrayList<String>> content = new LinkedList<>();
+        for (DataFrame child : children) {
+            for (int k = 0; k < this.getLabelList().size(); k++) {
+                content.get(k).addAll(child.getContent().get(k));
+            }
+        }
+        return content.get(i).get(j);
     }
 
     public int columns() {
@@ -160,8 +181,8 @@ public class DirectoryCOMP implements DataFrame {
         return column;
     }
 
-    public void accept(Visitor v, String label) {
-        v.visit(this, label);
+    public void accept(Visitor v) {
+        v.visit(this);
     }
 
     public Iterator<ArrayList<String>> iterator() {
