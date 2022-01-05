@@ -3,6 +3,8 @@ package mapreduce;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import factory.Data;
 import factory.DataFrame;
 
 public class MapReduce {
@@ -20,18 +22,18 @@ public class MapReduce {
             }
             return (T) Double.valueOf(suma / list.size());
         }
-        if (objecte instanceof DataFrame) {
-            DataFrame result = null;
+        if (objecte instanceof Data) {
+            Data result = null;
             boolean firstHasBeenAdded = false;
             for (T dataframe : list) {
                 if (!firstHasBeenAdded) {
                     if (dataframe != null){
-                        result = (DataFrame) dataframe /*.clone()*/;
+                        result = (Data) dataframe /*.clone()*/;
                         firstHasBeenAdded = true;
                     }
                 } else if (dataframe != null) {
                     for (int i = 0; i < result.getContent().size(); i++) {
-                        result.getContent().get(i).addAll(((DataFrame)dataframe).getContent().get(i));
+                        result.getContent().get(i).addAll(((Data)dataframe).getContent().get(i));
                     }
                 }
             }

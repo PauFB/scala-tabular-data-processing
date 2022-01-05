@@ -15,14 +15,19 @@ public class DirectoryCOMP implements DataFrame {
     public DirectoryCOMP(String directoryPath) {
         name = directoryPath;
         children = new LinkedList<>();
-        File directory = new File(directoryPath);
-        for (File file : directory.listFiles()) {
-            if (!file.isDirectory()) {
-                children.add(new FileCOMP(file.getAbsolutePath()));
-                continue;
+        try {
+            File directory = new File(directoryPath);
+            for (File file : directory.listFiles()) {
+                if (!file.isDirectory()) {
+                    children.add(new FileCOMP(file.getAbsolutePath()));
+                    continue;
+                }
+                children.add(new DirectoryCOMP(file.getAbsolutePath()));
             }
-            children.add(new DirectoryCOMP(file.getAbsolutePath()));
+        } catch (Exception e){
+            System.out.println("El directori esta buit");
         }
+
     }
 
     public List<DataFrame> getChildren(){
@@ -42,10 +47,21 @@ public class DirectoryCOMP implements DataFrame {
     }
 
     public int columns() {
-        int result = 0;
-        for (DataFrame child : this.children)
-            result += child.columns();
-        return result;
+        return this.getLabelList().size();
+    }
+
+    public LinkedList<String> getLabelList() {
+        LinkedList<String> labelList = new LinkedList<>();
+        LinkedList<String> newlabelList = new LinkedList<>();
+        for (DataFrame child : this.children) {
+            newlabelList = child.getLabelList();
+            for (String s : newlabelList){
+                if (!labelList.contains(s)){
+                    labelList.add(s);
+                }
+            }
+        }
+        return labelList;
     }
 
     public int size() {
@@ -61,8 +77,8 @@ public class DirectoryCOMP implements DataFrame {
         return temp;
     }
 
-    public DataFrame query(String label, Predicate<String> predicate) {
-        DataFrame result = null;
+    public Data query(String label, Predicate<String> predicate) {
+        Data result = null;
         boolean firstHasBeenAdded = false;
         for (DataFrame child : children) {
             if (!firstHasBeenAdded) {

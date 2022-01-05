@@ -11,7 +11,7 @@ public class MaximumVisitor implements Visitor {
     }
 
     public Double getResult() {
-        return result;
+        return this.result;
     }
 
 }

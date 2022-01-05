@@ -16,7 +16,7 @@ public class Main {
 		System.out.println("Size: " + dataFrame.size());
 		ArrayList<String> CSVsort = dataFrame.sort("Code", new IntAscending());
 		System.out.println("Sort IntAscending Code: " + CSVsort);
-		DataFrame CSVquery = dataFrame.query("Code", x -> Integer.parseInt(x) > 113);
+		Data CSVquery = dataFrame.query("Code", x -> Integer.parseInt(x) > 113);
 		System.out.println("Code > 113:\n" + CSVquery + "\n");
 
 
@@ -30,7 +30,7 @@ public class Main {
 		System.out.println("Size: " + dataFrame2.size());
 		ArrayList<String> JSONsort = dataFrame2.sort("LatD", new IntAscending());
 		System.out.println("Sort IntAscending LatD: " + JSONsort);
-		DataFrame JSONquery = dataFrame2.query("LatD", x -> Integer.parseInt(x) < 30);
+		Data JSONquery = dataFrame2.query("LatD", x -> Integer.parseInt(x) < 30);
 		System.out.println("LatD < 30:\n" + JSONquery + "\n");
 
 		System.out.println("****	Test TXT	****");
@@ -43,7 +43,7 @@ public class Main {
 		System.out.println("Size: " + dataFrame3.size());
 		ArrayList<String> TXTsort = dataFrame3.sort("Code", new IntAscending());
 		System.out.println("Sort IntAscending Code: " + TXTsort);
-		DataFrame TXTquery = dataFrame3.query("Code", x -> Integer.parseInt(x) > 113);
+		Data TXTquery = dataFrame3.query("Code", x -> Integer.parseInt(x) > 113);
 		System.out.println("Code > 113:\n" + TXTquery + "\n");
 	}
 

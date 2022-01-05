@@ -36,7 +36,6 @@ public class JSONData implements DataFrame {
 				content.add(new ArrayList<>());
             }
 
-
             for (HashMap<String, String> obj : array) {
             	 jsonObject = obj;
             	 for (int j = 0; j < jsonObject.size(); j++) {
@@ -59,64 +58,66 @@ public class JSONData implements DataFrame {
 	}
 
 	public String at(int id, String label) {
-		return data.at(id, label);
+		return this.data.at(id, label);
 	}
 
 	public String iat(int i, int j) {
-		return data.iat(i,j);
+		return this.data.iat(i, j);
 	}
 
 	public int columns() {
-		return data.columns();
+		return this.data.columns();
 	}
 
 	public int size() {
-		return data.size();
+		return this.data.size();
 	}
 
 	public ArrayList<String> sort(String label, Comparator<Object> c) {
-		return data.sort(label,c);
+		return this.data.sort(label,c);
 	}
 
-	public DataFrame query(String label, Predicate<String> func) {
-		if (data.query(label,func) != null){
-			return new JSONData(data.query(label,func));
-		}
-		return null;
+	public Data query(String label, Predicate<String> func) {
+		return data.query(label,func);
 	}
 
 	public Double max(String label) {
-		return data.max(label);
+		return this.data.max(label);
 	}
 
 	public Double min(String label) {
-		return data.min(label);
+		return this.data.min(label);
 	}
 
 	public Double average(String label) {
-		return data.average(label);
+		return this.data.average(label);
 	}
 
 	public Double sum(String label) {
-		return data.sum(label);
+		return this.data.sum(label);
 	}
 
 	public LinkedList<ArrayList<String>> getContent() {
-		return data.getContent();
+		return this.data.getContent();
+	}
+
+	@Override
+	public LinkedList<String> getLabelList() {
+		return this.data.getLabelList();
 	}
 
 	public ArrayList<String> getColumn(String label) {
-		return data.getColumn(label);
+		return this.data.getColumn(label);
 	}
 
-	public void accept(Visitor v, String label) {}
+	public void accept(Visitor v) {}
 
 	public Iterator<ArrayList<String>> iterator() {
-		return data.iterator();
+		return this.data.iterator();
 	}
 
 	@Override
 	public String toString() {
-		return data.toString();
+		return this.data.toString();
 	}
 }

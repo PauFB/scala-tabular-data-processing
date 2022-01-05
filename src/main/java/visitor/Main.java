@@ -10,9 +10,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        FileCOMP f1 = new FileCOMP("DimenLookupAge8277.csv");
-        FileCOMP f2 = new FileCOMP("cities.json");
-        FileCOMP f3 = new FileCOMP("example.txt");
+        FileCOMP f1 = new FileCOMP("src/main/resources/dir1/DimenLookupAge8277.csv");
+        FileCOMP f2 = new FileCOMP("src/main/resources/dir2/subdir2/cities.json");
+        FileCOMP f3 = new FileCOMP("src/main/resources/dir1/example.txt");
 
         DirectoryCOMP dir1 = new DirectoryCOMP("dir1");
         DirectoryCOMP dir2 = new DirectoryCOMP("dir2");
@@ -28,6 +28,7 @@ public class Main {
             d.accept(v,"SortOrder");
             System.out.println(v.getResult());
         }
+
         System.out.println("Maxim dir2 LatD");
         for (DataFrame d : list2) {
             v = new MaximumVisitor();

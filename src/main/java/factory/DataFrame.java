@@ -18,7 +18,7 @@ public interface DataFrame extends Iterable<ArrayList<String>> {
 
 	ArrayList<String> sort(String label, Comparator<Object> c);
 
-	DataFrame query(String label, Predicate<String> predicate);
+	Data query(String label, Predicate<String> predicate);
 
 	Double max(String label);
 
@@ -30,8 +30,10 @@ public interface DataFrame extends Iterable<ArrayList<String>> {
 
 	LinkedList<ArrayList<String>> getContent();
 
+	LinkedList<String> getLabelList();
+
 	ArrayList<String> getColumn(String label);
 
-	void accept(Visitor v, String label);
+	void accept(Visitor v);
 
 }

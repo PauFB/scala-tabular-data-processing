@@ -8,6 +8,11 @@ public class Data {
     LinkedList<String> labelList;
     LinkedList<ArrayList<String>> content;
 
+    public Data() {
+        this.labelList = new LinkedList<>();
+        this.content = new LinkedList<>();
+    }
+
     public Data(LinkedList<String> labelList, LinkedList<ArrayList<String>> content) {
         this.labelList = labelList;
         this.content = content;
@@ -17,6 +22,10 @@ public class Data {
         int labelIndex = labelList.indexOf(label);
 
         return content.get(labelIndex).get(id);
+    }
+
+    public LinkedList<String> getLabelList() {
+        return this.labelList;
     }
 
     public String iat(int i, int j) {

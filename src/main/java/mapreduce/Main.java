@@ -2,6 +2,8 @@ package mapreduce;
 
 import composite.*;
 import java.util.*;
+
+import factory.Data;
 import factory.DataFrame;
 
 
@@ -29,11 +31,13 @@ public class Main {
             System.out.println(elem);
         System.out.println("Columns Average: " + MapReduce.reduce(columns));
 
-        List<DataFrame> query_list = MapReduce.map(list, new Query("Code", x -> Integer.parseInt(x) > 888));
+
+        List<Data> query_list = MapReduce.map(list, new Query("Code", x -> Integer.parseInt(x) > 888));
         System.out.println("\nList of querys with Code > 888:");
-        for (DataFrame elem : query_list)
+        for (Data elem : query_list)
             System.out.println(elem);
         System.out.println("Result of Code > 888:\n" + MapReduce.reduce(query_list));
 
     }
+
 }
