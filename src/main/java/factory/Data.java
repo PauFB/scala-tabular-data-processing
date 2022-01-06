@@ -21,7 +21,10 @@ public class Data {
     public String at(int id, String label) {
         int labelIndex = labelList.indexOf(label);
 
-        return content.get(labelIndex).get(id);
+        if (labelIndex != -1 && id < size()){
+            return content.get(labelIndex).get(id);
+        }
+        return null;
     }
 
     public LinkedList<String> getLabelList() {
@@ -29,7 +32,10 @@ public class Data {
     }
 
     public String iat(int i, int j) {
-        return this.content.get(j).get(i);
+        if (i < columns() && j< size()){
+            return this.content.get(j).get(i);
+        }
+        return null;
     }
 
     public int columns() {

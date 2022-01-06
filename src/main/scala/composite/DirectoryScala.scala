@@ -50,31 +50,19 @@ class DirectoryScala() extends DataFrameTrait {
   }
   */
 
-  def at(id: Int, label: String): String = {
-    val labelList = this.getLabelList
-    val content = new util.LinkedList[util.ArrayList[String]]
-    var data: Data = null
-    try {
-      for (i <- 0 until this.getLabelList.size) {
-        content.add(new util.ArrayList[String])
-      }
-      for (child <- this.children.asScala) {
-        for (i <- 0 until labelList.size) {
-          content.get(i).addAll(child.getContent.get(i))
-        }
-      }
+  override def at(id: Int, label: String): String = {
+    var aux = id
+    for (child <- this.children.asScala) {
+      if (child.size - 1 < id)
+        aux = aux - child.size
+      else return child.at(aux, label)
     }
-    catch {
-      case e: Exception =>
-        return null
-    }
-    data = new Data(labelList, content)
-    return data.at(id, label)
+    null
   }
 
   def getLabelList(): java.util.LinkedList[String] = {
-    val labelList: util.LinkedList[String] = new util.LinkedList[String]
-    var newlabelList: util.LinkedList[String] = new util.LinkedList[String]
+    val labelList = new util.LinkedList[String]
+    var newlabelList = new util.LinkedList[String]
     for (child <- this.children.asScala) {
       newlabelList = child.getLabelList
       for (s <- newlabelList.asScala) {

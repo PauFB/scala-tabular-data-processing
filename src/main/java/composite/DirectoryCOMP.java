@@ -39,32 +39,25 @@ public class DirectoryCOMP implements DataFrame {
     }
 
     public String at(int id, String label) {
-        LinkedList<String> labelList = this.getLabelList();
-        LinkedList<ArrayList<String>> content = new LinkedList<>();
-        Data data;
-        try {
-            for (int i = 0; i < this.getLabelList().size(); i++)
-                content.add(new ArrayList<>());
-            for (DataFrame child : children) {
-                for (int i = 0; i < labelList.size(); i++) {
-                    content.get(i).addAll(child.getContent().get(i));
-                }
+        for (DataFrame child : children){
+            if (child.size()-1 < id){
+                id -= child.size();
+            } else{
+                return child.at(id, label);
             }
-        } catch (Exception e) {
-            return null;
         }
-        data = new Data(labelList, content);
-        return data.at(id, label);
+        return null;
     }
 
     public String iat(int i, int j) {
-        LinkedList<ArrayList<String>> content = new LinkedList<>();
-        for (DataFrame child : children) {
-            for (int k = 0; k < this.getLabelList().size(); k++) {
-                content.get(k).addAll(child.getContent().get(k));
+        for (DataFrame child : children){
+            if (child.size()-1 < i){
+                i -= child.size();
+            } else{
+                return child.iat(i, j);
             }
         }
-        return content.get(i).get(j);
+        return null;
     }
 
     public int columns() {
@@ -73,7 +66,7 @@ public class DirectoryCOMP implements DataFrame {
 
     public LinkedList<String> getLabelList() {
         LinkedList<String> labelList = new LinkedList<>();
-        LinkedList<String> newlabelList = new LinkedList<>();
+        LinkedList<String> newlabelList;
         for (DataFrame child : this.children) {
             newlabelList = child.getLabelList();
             for (String s : newlabelList){
@@ -166,11 +159,15 @@ public class DirectoryCOMP implements DataFrame {
     }
 
     public LinkedList<ArrayList<String>> getContent() {
-        LinkedList<ArrayList<String>> aux = new LinkedList<>();
-        for (DataFrame child : this.children) {
-            aux.addAll(child.getContent());
+        LinkedList<ArrayList<String>> content = new LinkedList<>();
+        for (int i = 0; i < getLabelList().size(); i++)
+            content.add(new ArrayList<>());
+        for (DataFrame child : children) {
+            for (int i = 0; i < content.size(); i++) {
+                content.get(i).addAll(child.getContent().get(i));
+            }
         }
-        return aux;
+        return content;
     }
 
     public ArrayList<String> getColumn(String label) {
@@ -189,7 +186,6 @@ public class DirectoryCOMP implements DataFrame {
         return children.get(0).iterator();
     }
 
-    @Override
     public String toString() {
         StringBuilder aux = new StringBuilder();
         for (DataFrame child : children){
