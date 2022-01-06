@@ -12,6 +12,7 @@ import scala.jdk.CollectionConverters._
 class FileScala(filePath: String) extends DataFrameTrait {
 
   val fileDataFrame = new FileCOMP(filePath)
+  val name = filePath
 
   def at(id: Int, label: String): String = {
     return this.fileDataFrame.at(id, label)
