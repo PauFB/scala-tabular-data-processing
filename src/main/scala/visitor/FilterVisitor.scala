@@ -1,18 +1,18 @@
 package visitor
 
-import dataframe.DataFrameTrait
+import dataframe.ScalaDataFrame
 import factory.Data
 
 import java.util.function.Predicate
 
-class FilterVisitor(label: String, predicate: Predicate[String]) extends VisitorTrait {
+class FilterVisitor(label: String, predicate: Predicate[String]) extends VisitorScala {
 
   var result: Data = null
 
-  override def visit(dataFrame: DataFrameTrait): Unit = {
+  override def visit(dataFrame: ScalaDataFrame): Unit = {
     this.result = dataFrame.filter(this.label, this.predicate)
   }
 
-  override def getResult[T](): T = this.result.asInstanceOf[T]
+  override def getResult[T]: T = result.asInstanceOf[T]
 
 }

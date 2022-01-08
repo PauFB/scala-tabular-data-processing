@@ -1,7 +1,6 @@
 package mapreduce;
 
-import factory.Data;
-import factory.DataFrame;
+import factory.*;
 
 import java.util.function.Function;
 import java.util.function.Predicate;

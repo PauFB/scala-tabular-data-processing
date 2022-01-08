@@ -1,73 +1,54 @@
 package composite
 
-import dataframe.DataFrameTrait
+import dataframe.ScalaDataFrame
 import factory.Data
-import visitor.VisitorTrait
+import visitor.VisitorScala
 
 import java.util
 import java.util.function.Predicate
-
 import scala.jdk.CollectionConverters._
 
-class FileScala(filePath: String) extends DataFrameTrait {
+class FileScala(filePath: String) extends ScalaDataFrame {
 
-  val fileDataFrame = new FileCOMP(filePath)
-  val name = filePath
+  val fileDataFrame = new FileData(filePath)
+  val name: String = filePath
 
-  def at(id: Int, label: String): String = {
-    return this.fileDataFrame.at(id, label)
-  }
+  def getData: Data = fileDataFrame.getData
 
-  def columns(): Int = {
-    return fileDataFrame.columns()
-  }
+  def getName: String = name
 
-  def size(): Int = {
-    return fileDataFrame.size()
-  }
+  def at(id: Int, label: String): String = fileDataFrame.at(id, label)
 
-  def getLabelList(): util.LinkedList[String] = {
-    return this.fileDataFrame.getLabelList
-  }
+  def columns(): Int = fileDataFrame.columns()
 
-  def getContent(): util.LinkedList[util.ArrayList[String]] = {
-    return this.fileDataFrame.getContent
-  }
+  def size(): Int = fileDataFrame.size()
 
-  override def filter(label: String, pred: Predicate[String]): Data = {
-    this.fileDataFrame.query(label, pred)
-  }
+  def getLabelList: util.LinkedList[String] = fileDataFrame.getLabelList
 
-  override def fileCount(): Int = 1
+  def getColumn(label: String): List[String] = fileDataFrame.getColumn(label).asScala.toList
 
-  override def directoryCount(): Int = 0
+  def filter(label: String, predicate: Predicate[String]): Data = fileDataFrame.query(label, predicate)
 
-  def accept(v: VisitorTrait): Unit = {
-    v.visit(this)
-  }
+  def fileCount(): Int = 1
 
-  def getColumn(label: String): List[String] = {
-    return fileDataFrame.getColumn(label).asScala.toList
-  }
+  def directoryCount(): Int = 0
+
+  def accept(v: VisitorScala): Unit = v.visit(this)
 
   override def listFilterMapStack[A, B](predicate: A => Boolean, method: A => B, list: List[A]): List[B] = list match {
     case Nil => Nil
     case front::rest => if (predicate(front))
-                          method(front) :: listFilterMapStack(predicate, method, rest)
-                        else
-                          listFilterMapStack(predicate, method, rest)
+      method(front) :: listFilterMapStack(predicate, method, rest)
+    else
+      listFilterMapStack(predicate, method, rest)
   }
 
   override def listFilterMapTail[A, B](predicate: A => Boolean, method: A => B, list: List[A], accumulator: List[B]): List[B] = list match {
     case Nil => accumulator
     case front::rest => if (predicate(front))
-                          listFilterMapTail(predicate, method, rest, accumulator :+ method(front))
-                        else
-                          listFilterMapTail(predicate, method, rest, accumulator)
-  }
-
-  override def getName(): String = {
-    return this.name
+      listFilterMapTail(predicate, method, rest, accumulator :+ method(front))
+    else
+      listFilterMapTail(predicate, method, rest, accumulator)
   }
 
 }

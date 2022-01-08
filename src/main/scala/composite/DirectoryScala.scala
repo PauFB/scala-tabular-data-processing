@@ -1,164 +1,138 @@
 package composite
 
-import dataframe.DataFrameTrait
-import factory.{Data, DataFrame}
-import visitor.VisitorTrait
+import dataframe.ScalaDataFrame
+import factory.Data
+import visitor.VisitorScala
 
 import java.io.File
 import java.util
 import java.util.function.Predicate
-import java.util.{ArrayList, LinkedList}
 import scala.jdk.CollectionConverters._
 
-class DirectoryScala() extends DataFrameTrait {
+class DirectoryScala() extends ScalaDataFrame {
 
-  var name: String = null
-  var children: java.util.List[DataFrameTrait] = new java.util.LinkedList[DataFrameTrait]()
+  var name: String = ""
+  var children: util.List[ScalaDataFrame] = new util.LinkedList[ScalaDataFrame]()
 
   def this(directoryPath: String) {
     this()
+    name = directoryPath
+    children = new util.LinkedList[ScalaDataFrame]
 
-    this.name = directoryPath
-    children = new LinkedList[DataFrameTrait]
-    try {
-      val directory = new File(directoryPath)
-      for (file <- directory.listFiles) {
-        if (!file.isDirectory) {
-          children.add(new FileScala(file.getAbsolutePath))
-        } else {
-          children.add(new DirectoryScala(file.getAbsolutePath))
-        }
-      }
-    } catch {
-      case e: Exception =>
-        System.out.println("Directory " + this.name + " is empty.")
-    }
-
-  }
-
-  /*
-  private val children = new java.util.LinkedList[DataFrameTrait]()
-
-  private val directory = new java.io.File(directoryPath)
-
-  for (file <- directory.listFiles()) {
+    var f: FileScala = null
+    var d: DirectoryScala = null
+    val directory = new File(directoryPath)
+    val archives = directory.listFiles
+    if (archives != null) for (file <- archives) { //For every archive that contains a DataFrame in directoryPath, add it to children
       if (!file.isDirectory) {
-        this.children.add(new FileScala(file.getAbsolutePath))
-      } else {
-        this.children.add(new DirectoryScala(file.getAbsolutePath))
+        f = new FileScala(file.getAbsolutePath)
+        if (f.getData != null) children.add(f)
       }
+      else {
+        d = new DirectoryScala(file.getAbsolutePath)
+        if (!d.getChildren.isEmpty) children.add(d)
+      }
+    }
+    else System.out.println("Directory is empty")
   }
-  */
 
-  override def at(id: Int, label: String): String = {
+  def getChildren: util.List[ScalaDataFrame] = children
+
+  def getName: String = name
+
+  def at(id: Int, label: String): String = {
     var aux = id
-    for (child <- this.children.asScala) {
-      if (child.size - 1 < id)
+    for (child <- children.asScala) {
+      if (aux > child.size - 1)
         aux = aux - child.size
       else return child.at(aux, label)
     }
     null
   }
 
-  def getLabelList(): java.util.LinkedList[String] = {
-    val labelList = new util.LinkedList[String]
-    var newlabelList = new util.LinkedList[String]
-    for (child <- this.children.asScala) {
-      newlabelList = child.getLabelList
-      for (s <- newlabelList.asScala) {
-        if (!labelList.contains(s)) labelList.add(s)
-      }
-    }
-    return labelList
-  }
-
-  def getContent(): util.LinkedList[java.util.ArrayList[String]] = {
-    val aux = new util.LinkedList[java.util.ArrayList[String]]
-    for (child <- this.children.asScala) {
-      aux.addAll(child.getContent)
-    }
-    return aux
-  }
-
-  def columns(): Int = {
-    return this.getLabelList().size()
-  }
+  def columns(): Int = getLabelList.size()
 
   def size(): Int = {
     var result = 0
     for (child <- this.children.asScala) {
       result += child.size
     }
-    return result
+    result
   }
 
-  override def filter(label: String, predicate: Predicate[String]): Data = {
+  def getLabelList: java.util.LinkedList[String] = {
+    val labelList = new util.LinkedList[String]
+    var newLabelList = new util.LinkedList[String]
+    for (child <- children.asScala) {         //For every child
+      newLabelList = child.getLabelList
+      for (s <- newLabelList.asScala) {
+        if (!labelList.contains(s)) labelList.add(s)    //Add labels that are not in labelList
+      }
+    }
+    labelList
+  }
+
+  def getColumn(label: String): List[String] = {
+    val column: List[String] = null
+    for (child <- children.asScala) {         //For every child
+      if (child.getColumn(label) != null) column :+ child.getColumn(label) //Accumulate the elements of the column indexed by label
+    }
+    column
+  }
+
+  def filter(label: String, predicate: Predicate[String]): Data = {
     var result: Data = null
     var firstHasBeenAdded = false
-    for (child <- this.children.asScala) {
-      if ((!firstHasBeenAdded) && (child.filter(label, predicate)) != null) {
-        result = child.filter(label, predicate)
+    for (child <- this.children.asScala) {      //For every child
+      if ((!firstHasBeenAdded) && child.filter(label, predicate) != null) {
+        result = child.filter(label, predicate)     //result takes the first filter
         firstHasBeenAdded = true
       }
       else if (child.filter(label, predicate) != null) for (i <- 0 until result.getContent.size) {
-        result.getContent.get(i).addAll(child.filter(label, predicate).getContent.get(i))
+        result.getContent.get(i).addAll(child.filter(label, predicate).getContent.get(i)) //Add to the content of result the content of the rest of filters
       }
     }
-    return result
+    result
   }
 
   def fileCount(): Int = {
     var result = 0
     for (child <- this.children.asScala) {
-      if (child.isInstanceOf[FileScala]){
+      if (child.isInstanceOf[FileScala]){   //If child is a File add 1
         result +=1
       } else {
-        result += child.fileCount()
+        result += child.fileCount()         //If child is a Directory add its number of files
       }
     }
-    return result
+    result
   }
 
   def directoryCount(): Int = {
     var result = 0
     for (child <- this.children.asScala)
-      if (child.isInstanceOf[DirectoryScala]) {
+      if (child.isInstanceOf[DirectoryScala]) {   //If child is a Directory add 1 and its number of directories
         result += 1
         result += child.directoryCount()
       }
-    return result
+    result
   }
 
-  def accept(v: VisitorTrait): Unit = {
-    v.visit(this)
-  }
+  def accept(v: VisitorScala): Unit = v.visit(this)
 
   override def listFilterMapStack[A, B](predicate: A => Boolean, method: A => B, list: List[A]): List[B] = list match {
     case Nil => Nil
-    case front::rest => if (predicate(front))
-      method(front) :: listFilterMapStack(predicate, method, rest)
+    case front::rest => if (predicate(front))     //If the front fulfil the condition
+      method(front) :: listFilterMapStack(predicate, method, rest)  //return the result of the applied operation to it added to the recursive call of the rest
     else
-      listFilterMapStack(predicate, method, rest)
+      listFilterMapStack(predicate, method, rest)   //If not return the recursive call of the rest
   }
 
   override def listFilterMapTail[A, B](predicate: A => Boolean, method: A => B, list: List[A], accumulator: List[B]): List[B] = list match {
     case Nil => accumulator
-    case front::rest => if (predicate(front)) {
-      listFilterMapTail(predicate, method, rest, accumulator :+ method(front))
-    } else
-      listFilterMapTail(predicate, method, rest, accumulator)
-  }
-
-  override def getColumn(label: String): List[String] = {
-    val column: List[String] = null
-    for (child <- children.asScala) {
-      column :+ child.getColumn(label)
-    }
-    return column
-  }
-
-  override def getName(): String = {
-    return this.name
+    case front::rest => if (predicate(front))     //If the front fulfil the condition
+      listFilterMapTail(predicate, method, rest, accumulator :+ method(front))  //return the recursive call of the rest adding the result of the applied operation to it
+    else
+      listFilterMapTail(predicate, method, rest, accumulator)   //If not return the recursive call of the rest
   }
 
 }

@@ -4,7 +4,7 @@ import factory.DataFrame;
 
 public class SumVisitor implements Visitor {
 
-    private String label;
+    private final String label;
     private Double result;
 
     public SumVisitor(String label) {
@@ -12,11 +12,11 @@ public class SumVisitor implements Visitor {
     }
 
     public void visit(DataFrame dataFrame) {
-        this.result = dataFrame.sum(this.label);
+        result = dataFrame.sum(label);
     }
 
     public Double getResult() {
-        return this.result;
+        return result;
     }
 
 }

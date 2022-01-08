@@ -20,20 +20,20 @@ public class CSVData implements DataFrame {
 			String row = fileReader.readLine();
 			StringTokenizer st = new StringTokenizer(row, ",");
 
-			// Llegir la capcalera
+			//Read header
 			while (st.hasMoreTokens()) {
-				content.add(new ArrayList<>());		//Per cada nova entrada crear una nova columna
-				labelList.add(st.nextToken()); 		// i afegir a LabelList
+				content.add(new ArrayList<>());		//For every new entrance create a new column
+				labelList.add(st.nextToken()); 		//and add the new label to labelList
 			}
 
-			// Llegir el contingut
+			//Read content
 			row = fileReader.readLine();
 			while (row != null) {
 				int i = 0;
 				st = new StringTokenizer(row,",");
 
 				while (st.hasMoreTokens()) {
-					content.get(i).add(st.nextToken());		//Per cada nova entrada posar l'element
+					content.get(i).add(st.nextToken());		//For every new entrance add the element to content
 					i++;
 				}				
 				row = fileReader.readLine();
@@ -44,72 +44,73 @@ public class CSVData implements DataFrame {
 			fileReader.close();
 
 		} catch (FileNotFoundException e) {
-			System.out.println("El fitxer d'entrada no existeix");
+			System.out.println("File doesn't exist");
 		} catch (IOException e) {
-			System.out.println("Excepcio d'E/S: " + e);
+			System.out.println("I/O Exception: " + e);
 		}
 	}
 
 	public String at(int id, String label) {
-		return this.data.at(id, label);
+		return data.at(id, label);
 	}
 
 	public String iat(int i, int j) {
-		return this.data.iat(i,j);
+		return data.iat(i,j);
 	}
 
 	public int columns() {
-		return this.data.columns();
+		return data.columns();
 	}
 
 	public int size() {
-		return this.data.size();
+		return data.size();
 	}
 
-	public ArrayList<String> sort(String label, Comparator<Object> c) {
-		return this.data.sort(label,c);
+	public ArrayList<String> sort(String label, Comparator<String> c) {
+		return data.sort(label,c);
 	}
 
 	public Data query(String label, Predicate<String> func) {
-		return this.data.query(label, func);
+		return data.query(label, func);
 	}
 
 	public Double max(String label) {
-		return this.data.max(label);
+		return data.max(label);
 	}
 
 	public Double min(String label) {
-		return this.data.min(label);
+		return data.min(label);
 	}
 
 	public Double average(String label) {
-		return this.data.average(label);
+		return data.average(label);
 	}
 
 	public Double sum(String label) {
-		return this.data.sum(label);
+		return data.sum(label);
 	}
 
 	public LinkedList<ArrayList<String>> getContent() {
-		return this.data.getContent();
+		return data.getContent();
 	}
 
 	public LinkedList<String> getLabelList() {
-		return this.data.getLabelList();
+		return data.getLabelList();
 	}
 
 	public ArrayList<String> getColumn(String label) {
-		return this.data.getColumn(label);
+		return data.getColumn(label);
 	}
 
 	public void accept(Visitor v) {}
 
 	public Iterator<ArrayList<String>> iterator() {
-		return this.data.iterator();
+		return data.iterator();
 	}
 
+	@Override
 	public String toString() {
-		return this.data.toString();
+		return data.toString();
 	}
 
 }

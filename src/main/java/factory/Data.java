@@ -8,11 +8,6 @@ public class Data {
     LinkedList<String> labelList;
     LinkedList<ArrayList<String>> content;
 
-    public Data() {
-        this.labelList = new LinkedList<>();
-        this.content = new LinkedList<>();
-    }
-
     public Data(LinkedList<String> labelList, LinkedList<ArrayList<String>> content) {
         this.labelList = labelList;
         this.content = content;
@@ -27,26 +22,22 @@ public class Data {
         return null;
     }
 
-    public LinkedList<String> getLabelList() {
-        return this.labelList;
-    }
-
     public String iat(int i, int j) {
-        if (i < columns() && j< size()){
-            return this.content.get(j).get(i);
+        if (i < size() && j < columns()){
+            return content.get(j).get(i);
         }
         return null;
     }
 
     public int columns() {
-        return this.labelList.size();
+        return labelList.size();
     }
 
     public int size() {
-        return this.content.get(0).size();
+        return content.get(0).size();
     }
 
-    public ArrayList<String> sort(String label, Comparator<Object> c) {
+    public ArrayList<String> sort(String label, Comparator<String> c) {
         int labelIndex = labelList.indexOf(label);
 
         if (labelIndex != -1){
@@ -61,22 +52,24 @@ public class Data {
         int col = labelList.indexOf(label);
 
         if (col != -1) {
-            List<String> filtered_column = content.get(col).stream().filter(func).toList();
+            List<String> filtered_column = content.get(col).stream().filter(func).toList();     //Filter the column indexed by label
 
-            LinkedList<ArrayList<String>> aux = new LinkedList<>();
-            for (int k = 0; k < this.columns(); k++){
-                aux.add(new ArrayList<>());
-            }
+            if (!filtered_column.isEmpty()) {
+                LinkedList<ArrayList<String>> aux = new LinkedList<>();
+                for (int k = 0; k < columns(); k++){
+                    aux.add(new ArrayList<>());
+                }
 
-            for (int j = 0; j < this.size(); j++) {
-                if (filtered_column.contains(content.get(col).get(j))){
-                    for (int i = 0; i < this.columns(); i++) {
-                        aux.get(i).add(content.get(i).get(j));
+                for (int j = 0; j < size(); j++) {                          //For every line
+                    if (filtered_column.contains(content.get(col).get(j))){     //If the element in the column indexed by label is in filtered_column
+                        for (int i = 0; i < columns(); i++) {
+                            aux.get(i).add(content.get(i).get(j));                  //Add it to aux
+                        }
                     }
                 }
-            }
 
-            return new Data(labelList, aux);
+                return new Data(labelList, aux);
+            }
         }
         return null;
     }
@@ -92,7 +85,6 @@ public class Data {
                 }
                 return max;
             } catch (NumberFormatException e) {
-                System.out.println(e);
                 return null;
             }
         }
@@ -110,7 +102,6 @@ public class Data {
                 }
                 return min;
             } catch (NumberFormatException e){
-                System.out.println(e);
                 return null;
             }
         }
@@ -128,7 +119,6 @@ public class Data {
                 }
                 return avg/content.get(labelIndex).size();
             } catch (NumberFormatException e){
-                System.out.println(e);
                 return null;
             }
         }
@@ -146,7 +136,6 @@ public class Data {
                 }
                 return sum;
             } catch (NumberFormatException e){
-                System.out.println(e);
                 return null;
             }
         }
@@ -157,10 +146,14 @@ public class Data {
         return content;
     }
 
+    public LinkedList<String> getLabelList() {
+        return labelList;
+    }
+
     public ArrayList<String> getColumn(String label) {
-        int labelIndex = this.labelList.indexOf(label);
+        int labelIndex = labelList.indexOf(label);
         if (labelIndex != -1) {
-            return this.content.get(labelIndex);
+            return content.get(labelIndex);
         }
         return null;
     }

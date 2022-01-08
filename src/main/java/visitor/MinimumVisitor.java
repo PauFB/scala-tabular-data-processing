@@ -4,7 +4,7 @@ import factory.DataFrame;
 
 public class MinimumVisitor implements Visitor {
 
-    private String label;
+    private final String label;
     private Double result;
 
     public MinimumVisitor(String label) {
@@ -12,11 +12,11 @@ public class MinimumVisitor implements Visitor {
     }
 
     public void visit(DataFrame dataFrame) {
-        this.result = dataFrame.min(this.label);
+        result = dataFrame.min(label);
     }
 
     public Double getResult() {
-        return this.result;
+        return result;
     }
 
 }

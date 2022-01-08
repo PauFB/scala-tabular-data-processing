@@ -1,15 +1,16 @@
 package observer;
 
+import factory.DataFrame;
+
 import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Interceptor implements java.lang.reflect.InvocationHandler {
 
-    private Object subject;
-    private List<Observer> observerList = new LinkedList<>();
+    private final Object subject;
+    private final List<Observer> observerList = new LinkedList<>();
 
-    public Interceptor(Object subject) {
+    public Interceptor(DataFrame subject) {
         this.subject = subject;
     }
 
@@ -24,26 +25,7 @@ public class Interceptor implements java.lang.reflect.InvocationHandler {
             observer.update(method.getName());
         }
 
-        /*
-        if (method.getDeclaringClass() == DataFrame.class) {
-
-            switch (method.getName()) {
-
-                case "columns":
-                    System.out.println("Interceptor (InvocationHandler) has intercepted columns()");
-                    break;
-
-                case "size":
-                    System.out.println("Interceptor (InvocationHandler) has intercepted size()");
-                    break;
-
-            }
-
-        }
-        */
-
         return method.invoke(this.subject, args);
 
     }
-
 }

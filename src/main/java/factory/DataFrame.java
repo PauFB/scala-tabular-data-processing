@@ -1,10 +1,9 @@
 package factory;
 
-import visitor.AverageVisitor;
+import visitor.*;
 
 import java.util.*;
 import java.util.function.Predicate;
-import visitor.*;
 
 public interface DataFrame extends Iterable<ArrayList<String>> {
 	
@@ -16,7 +15,7 @@ public interface DataFrame extends Iterable<ArrayList<String>> {
 	
 	int size();
 
-	ArrayList<String> sort(String label, Comparator<Object> c);
+	ArrayList<String> sort(String label, Comparator<String> c);
 
 	Data query(String label, Predicate<String> predicate);
 

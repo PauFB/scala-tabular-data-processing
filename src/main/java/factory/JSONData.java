@@ -53,28 +53,24 @@ public class JSONData implements DataFrame {
 		
 	}
 
-	public JSONData(Data data) {
-		this.data = data;
-	}
-
 	public String at(int id, String label) {
-		return this.data.at(id, label);
+		return data.at(id, label);
 	}
 
 	public String iat(int i, int j) {
-		return this.data.iat(i, j);
+		return data.iat(i, j);
 	}
 
 	public int columns() {
-		return this.data.columns();
+		return data.columns();
 	}
 
 	public int size() {
-		return this.data.size();
+		return data.size();
 	}
 
-	public ArrayList<String> sort(String label, Comparator<Object> c) {
-		return this.data.sort(label,c);
+	public ArrayList<String> sort(String label, Comparator<String> c) {
+		return data.sort(label,c);
 	}
 
 	public Data query(String label, Predicate<String> func) {
@@ -82,42 +78,41 @@ public class JSONData implements DataFrame {
 	}
 
 	public Double max(String label) {
-		return this.data.max(label);
+		return data.max(label);
 	}
 
 	public Double min(String label) {
-		return this.data.min(label);
+		return data.min(label);
 	}
 
 	public Double average(String label) {
-		return this.data.average(label);
+		return data.average(label);
 	}
 
 	public Double sum(String label) {
-		return this.data.sum(label);
+		return data.sum(label);
 	}
 
 	public LinkedList<ArrayList<String>> getContent() {
-		return this.data.getContent();
+		return data.getContent();
 	}
 
-	@Override
 	public LinkedList<String> getLabelList() {
-		return this.data.getLabelList();
+		return data.getLabelList();
 	}
 
 	public ArrayList<String> getColumn(String label) {
-		return this.data.getColumn(label);
+		return data.getColumn(label);
 	}
 
 	public void accept(Visitor v) {}
 
 	public Iterator<ArrayList<String>> iterator() {
-		return this.data.iterator();
+		return data.iterator();
 	}
 
 	@Override
 	public String toString() {
-		return this.data.toString();
+		return data.toString();
 	}
 }

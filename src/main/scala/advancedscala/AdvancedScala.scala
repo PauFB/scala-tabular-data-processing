@@ -1,13 +1,11 @@
 package advancedscala
 
-import composite.MainScala.{isGreaterThanFour, roundDoubleValue}
+import recursion.RecursionTest.{isGreaterThanFour, roundDoubleValue}
 import composite.{DirectoryScala, FileScala}
-import dataframe.DataFrameTrait
-
-// ----------------- Runtime multiple inheritance -----------------
+import dataframe.ScalaDataFrame
 
 trait Talkable {
-  def talk(): String {}
+  def talk(): String = ""
 }
 
 trait XAnimal extends Talkable {
@@ -18,34 +16,37 @@ trait XPerson {
   def say(): String = "I am a person"
 }
 
-object MainAdvancedScala extends scala.App {
+object AdvancedScala extends scala.App {
 
   // ----------------- Runtime multiple inheritance -----------------
 
-  val et = new FileScala("src/main/resources/example.csv") with XPerson with XAnimal
-  println(et.say())
-  println(et.talk())
-  println(et.size())
+  val dataframeTalkable = new FileScala("src/main/resources/recursion.csv") with XPerson with XAnimal
+  println(dataframeTalkable.say())
+  println(dataframeTalkable.talk())
+  println(dataframeTalkable.size())
   println()
 
-  // ------------------------- for - yield -------------------------
+  // ------------------------- for loops -------------------------
 
   val dir = new DirectoryScala("src/main/resources/dir1")
   val dir2 = new DirectoryScala("src/main/resources/dir2")
 
-  val csv = new FileScala("src/main/resources/dir1/DimenLookupAge8277.csv")
+  val csv = new FileScala("src/main/resources/dir1/ages.csv")
   val json = new FileScala("src/main/resources/dir2/cities.json")
   val txt = new FileScala("src/main/resources/dir1/example.txt")
-  val llista = List(dir,dir2,csv,json,txt)
-  println(for (dataframe <- llista; name = dataframe.getName(); if (name.contains("dir1"))) yield name)
+
+  val list = List(dir,dir2,csv,json,txt)
+
+  println("List of Dataframes that are in dir1:")
+  println(for (dataframe <- list; name = dataframe.getName; if name.contains("dir1")) yield name)
   println()
 
   // ------------------------ fold, tabulate ------------------------
 
-  val sizeList = for (dataframe <- llista) yield dataframe.size()
+  val sizeList = for (dataframe <- list) yield dataframe.size()
   val totalSize = sizeList.foldLeft(0) (_ + _)
   println("sizeList: " + sizeList)
-  println("sizeList.foldleft(0) (_ + _) a.k.a. total size: " + totalSize)
+  println("sizeList.foldLeft(0) (_ + _) a.k.a. total size: " + totalSize)
 
   val generateList = List.tabulate(11) (n => n * totalSize)
   println("list of (totalSize * [0, 10]): " + generateList)
@@ -54,9 +55,8 @@ object MainAdvancedScala extends scala.App {
   // --------------------- Partial parametrization ---------------------
 
   println("--- Round Double to Int ---")
-  val df: DataFrameTrait = new FileScala("src/main/resources/example.csv")
+  val df: ScalaDataFrame = new FileScala("src/main/resources/recursion.csv")
   val applyToGreaterThanFour = df.listFilterMapStack(isGreaterThanFour, roundDoubleValue, _: List[String])
-  println("tail DataFrameTrait (curry): " + applyToGreaterThanFour(df.getColumn("Value")))
-  println()
+  println("applyToGreaterThanFour(Value): " + applyToGreaterThanFour(df.getColumn("Value")))
 
 }

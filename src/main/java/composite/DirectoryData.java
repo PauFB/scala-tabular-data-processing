@@ -7,27 +7,36 @@ import java.io.File;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class DirectoryCOMP implements DataFrame {
+public class DirectoryData implements DataFrame {
 
     private final String name;
     private final List<DataFrame> children;
 
-    public DirectoryCOMP(String directoryPath) {
+    public DirectoryData(String directoryPath) {
         name = directoryPath;
         children = new LinkedList<>();
-        try {
-            File directory = new File(directoryPath);
-            for (File file : directory.listFiles()) {
-                if (!file.isDirectory()) {
-                    children.add(new FileCOMP(file.getAbsolutePath()));
-                    continue;
-                }
-                children.add(new DirectoryCOMP(file.getAbsolutePath()));
-            }
-        } catch (Exception e){
-            System.out.println("El directori esta buit");
-        }
 
+        FileData f;
+        DirectoryData d;
+        File directory = new File(directoryPath);
+        File[] archives = directory.listFiles();
+        if (archives != null){
+            for (File file : archives) {           //For every archive that contains a DataFrame in directoryPath, add it to children
+                if (!file.isDirectory()) {
+                    f = new FileData(file.getAbsolutePath());
+                    if (f.getData() != null){
+                        children.add(f);
+                    }
+                } else {
+                    d = new DirectoryData(file.getAbsolutePath());
+                    if (!d.getChildren().isEmpty()){
+                        children.add(d);
+                    }
+                }
+            }
+        } else {
+            System.out.println("Directory is empty");
+        }
     }
 
     public List<DataFrame> getChildren(){
@@ -40,7 +49,7 @@ public class DirectoryCOMP implements DataFrame {
 
     public String at(int id, String label) {
         for (DataFrame child : children){
-            if (child.size()-1 < id){
+            if (id > child.size()-1){
                 id -= child.size();
             } else{
                 return child.at(id, label);
@@ -64,20 +73,6 @@ public class DirectoryCOMP implements DataFrame {
         return this.getLabelList().size();
     }
 
-    public LinkedList<String> getLabelList() {
-        LinkedList<String> labelList = new LinkedList<>();
-        LinkedList<String> newlabelList;
-        for (DataFrame child : this.children) {
-            newlabelList = child.getLabelList();
-            for (String s : newlabelList){
-                if (!labelList.contains(s)){
-                    labelList.add(s);
-                }
-            }
-        }
-        return labelList;
-    }
-
     public int size() {
         int result = 0;
         for (DataFrame child : this.children)
@@ -85,24 +80,27 @@ public class DirectoryCOMP implements DataFrame {
         return result;
     }
 
-    public ArrayList<String> sort(String label, Comparator<Object> c) {
-        ArrayList<String> temp = (ArrayList<String>) getColumn(label).clone();
-        temp.sort(c);
-        return temp;
+    public ArrayList<String> sort(String label, Comparator<String> c) {
+        ArrayList<String> temp = new ArrayList<>(getColumn(label));
+        if (!temp.isEmpty()){
+            temp.sort(c);
+            return temp;
+        }
+        return null;
     }
 
     public Data query(String label, Predicate<String> predicate) {
         Data result = null;
         boolean firstHasBeenAdded = false;
-        for (DataFrame child : children) {
+        for (DataFrame child : children) {                      //For every child
             if (!firstHasBeenAdded) {
                 if (child.query(label, predicate) != null){
-                    result = child.query(label, predicate);
+                    result = child.query(label, predicate);     //result takes the first query
                     firstHasBeenAdded = true;
                 }
             } else if (child.query(label, predicate) != null) {
                 for (int i = 0; i < result.getContent().size(); i++) {
-                    result.getContent().get(i).addAll(child.query(label, predicate).getContent().get(i));
+                    result.getContent().get(i).addAll(child.query(label, predicate).getContent().get(i));   //Add to the content of result the content of the rest of querys
                 }
             }
         }
@@ -116,7 +114,10 @@ public class DirectoryCOMP implements DataFrame {
                 maxValue = Math.max(child.max(label), maxValue);
             }
         }
-        return maxValue;
+        if (maxValue != Double.MIN_VALUE){
+            return maxValue;
+        }
+        return null;
     }
 
     public Double min(String label) {
@@ -126,18 +127,21 @@ public class DirectoryCOMP implements DataFrame {
                 minValue = Math.min(child.min(label), minValue);
             }
         }
-        return minValue;
+        if (minValue != Double.MAX_VALUE){
+            return minValue;
+        }
+        return null;
     }
 
     public Double average(String label) {
         ArrayList<String> list;
         double accumulator = 0.0;
         int nElements = 0;
-        for (DataFrame child : children) {
+        for (DataFrame child : children) {          //For every child
             list = child.getColumn(label);
             if (list != null) {
                 for (String value : list) {
-                    accumulator += Integer.parseInt(value);
+                    accumulator += Integer.parseInt(value);     //Accumulate the elements of the column indexed by label
                     nElements++;
                 }
             }
@@ -155,25 +159,44 @@ public class DirectoryCOMP implements DataFrame {
                 sum += child.sum(label);
             }
         }
-        return sum;
+        if (sum != 0){
+            return sum;
+        }
+        return null;
     }
 
     public LinkedList<ArrayList<String>> getContent() {
         LinkedList<ArrayList<String>> content = new LinkedList<>();
         for (int i = 0; i < getLabelList().size(); i++)
             content.add(new ArrayList<>());
-        for (DataFrame child : children) {
+        for (DataFrame child : children) {                  //For every child
             for (int i = 0; i < content.size(); i++) {
-                content.get(i).addAll(child.getContent().get(i));
+                content.get(i).addAll(child.getContent().get(i));   //Accumulate the content
             }
         }
         return content;
     }
 
+    public LinkedList<String> getLabelList() {
+        LinkedList<String> labelList = new LinkedList<>();
+        LinkedList<String> childLabelList;
+        for (DataFrame child : children) {              //For every child
+            childLabelList = child.getLabelList();
+            for (String s : childLabelList){
+                if (!labelList.contains(s)){
+                    labelList.add(s);                   //Add labels that are not in labelList
+                }
+            }
+        }
+        return labelList;
+    }
+
     public ArrayList<String> getColumn(String label) {
         ArrayList<String> column = new ArrayList<>();
-        for (DataFrame child : children){
-            column.addAll(child.getColumn(label));
+        for (DataFrame child : children){               //For every child
+            if (child.getColumn(label) != null){
+                column.addAll(child.getColumn(label));          //Accumulate the elements of the column indexed by label
+            }
         }
         return column;
     }
@@ -183,9 +206,10 @@ public class DirectoryCOMP implements DataFrame {
     }
 
     public Iterator<ArrayList<String>> iterator() {
-        return children.get(0).iterator();
+        return getContent().iterator();
     }
 
+    @Override
     public String toString() {
         StringBuilder aux = new StringBuilder();
         for (DataFrame child : children){

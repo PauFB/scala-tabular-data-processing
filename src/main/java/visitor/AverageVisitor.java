@@ -4,7 +4,7 @@ import factory.DataFrame;
 
 public class AverageVisitor implements Visitor {
 
-    private String label;
+    private final String label;
     private Double result;
 
     public AverageVisitor(String label) {
@@ -12,11 +12,11 @@ public class AverageVisitor implements Visitor {
     }
 
     public void visit(DataFrame dataFrame) {
-        this.result = dataFrame.average(this.label);
+        result = dataFrame.average(label);
     }
 
     public Double getResult() {
-        return this.result;
+        return result;
     }
 
 }
