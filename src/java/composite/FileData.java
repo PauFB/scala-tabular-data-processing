@@ -1,9 +1,12 @@
 package composite;
 
 import factory.*;
-import visitor.*;
+import visitor.Visitor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.function.Predicate;
 
 public class FileData implements DataFrame {
@@ -13,19 +16,19 @@ public class FileData implements DataFrame {
 
     public FileData(String filePath) {
         name = filePath;
-        DataFrame dataFrame = null;             //Create a new Dataframe depending on its extension
+        DataFrame dataFrame = null;                                             // Create a new Dataframe depending on the file's extension
         if (filePath.contains(".csv")) {
             dataFrame = new CSVData(filePath);
-        } else if(filePath.contains(".json")){
+        } else if (filePath.contains(".json")) {
             dataFrame = new JSONData(filePath);
-        } else if(filePath.contains(".txt")){
+        } else if (filePath.contains(".txt")) {
             dataFrame = new TXTData(filePath);
         }
-        if (dataFrame != null){
-            data = new Data(dataFrame.getLabelList(),dataFrame.getContent());   //Instantiate data with the information of the dataframe
+        if (dataFrame != null) {
+            data = new Data(dataFrame.getLabelList(), dataFrame.getContent());   // Instantiate the contained data
         } else {
             data = null;
-            System.out.println("File is not a Dataframe");
+            System.out.println("File is not a DataFrame");
         }
     }
 
@@ -42,7 +45,7 @@ public class FileData implements DataFrame {
     }
 
     public String iat(int i, int j) {
-        return data.iat(i,j);
+        return data.iat(i, j);
     }
 
     public int columns() {
@@ -77,7 +80,7 @@ public class FileData implements DataFrame {
         return data.sum(label);
     }
 
-    public LinkedList<ArrayList<String>> getContent(){
+    public LinkedList<ArrayList<String>> getContent() {
         return data.getContent();
     }
 
@@ -101,4 +104,5 @@ public class FileData implements DataFrame {
     public String toString() {
         return data.toString();
     }
+
 }

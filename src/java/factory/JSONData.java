@@ -1,118 +1,126 @@
 package factory;
 
-import java.io.*;
+import org.json.simple.parser.ContainerFactory;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import visitor.Visitor;
+
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;
 
-import org.json.simple.parser.*;
-import visitor.Visitor;
-
 public class JSONData implements DataFrame {
-	
-	Data data;
 
-	public JSONData(String file) {
+    Data data;
+
+    public JSONData(String file) {
         try {
-			LinkedList<String> labelList = new LinkedList<>();
-			LinkedList<ArrayList<String>> content = new LinkedList<>();
+            LinkedList<String> labelList = new LinkedList<>();
+            LinkedList<ArrayList<String>> content = new LinkedList<>();
 
-			JSONParser parser = new JSONParser();
+            JSONParser parser = new JSONParser();
 
-			ContainerFactory orderedKeyFactory = new ContainerFactory() {
-				public List<String> creatArrayContainer() {
-					return new LinkedList<>();
-				}
+            ContainerFactory orderedKeyFactory = new ContainerFactory() {
+                public List<String> creatArrayContainer() {
+                    return new LinkedList<>();
+                }
 
-				public Map<String, String> createObjectContainer() {
-					return new LinkedHashMap<>();
-				}
-			};
+                public Map<String, String> createObjectContainer() {
+                    return new LinkedHashMap<>();
+                }
+            };
 
-        	LinkedList<HashMap<String, String>> array = (LinkedList<HashMap<String, String>>) parser.parse(new FileReader(file), orderedKeyFactory);
+            // Get a list of JSONObject by reading the file
+            LinkedList<HashMap<String, String>> array = (LinkedList<HashMap<String, String>>) parser.parse(new FileReader(file), orderedKeyFactory);
 
-			HashMap<String, String> jsonObject = array.get(0);
+            // Read the header (list of labels)
+            HashMap<String, String> jsonObject = array.get(0);              // Take the first JSONObject (could be any)
             for (int i = 0; i < jsonObject.keySet().size(); i++) {
-				labelList.add((String)jsonObject.keySet().toArray()[i]);
-				content.add(new ArrayList<>());
+                labelList.add((String) jsonObject.keySet().toArray()[i]);   // and add its keys (labels) to labelList
+                content.add(new ArrayList<>());
             }
 
-            for (HashMap<String, String> obj : array) {
-            	 jsonObject = obj;
-            	 for (int j = 0; j < jsonObject.size(); j++) {
-					 content.get(j).add(String.valueOf(jsonObject.get(labelList.get(j))));
-				 }
+            // Read the file's content
+            for (HashMap<String, String> obj : array) {                     // For every JSONObject
+                jsonObject = obj;
+                for (int j = 0; j < jsonObject.size(); j++) {               // For every element of the current JSONObject,
+                                                                            // add it to the DataFrame's content
+                    content.get(j).add(String.valueOf(jsonObject.get(labelList.get(j))));
+                }
             }
 
-			data = new Data(labelList,content);
+            data = new Data(labelList, content);                            // Initialize the contained data
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-		
-	}
 
-	public String at(int id, String label) {
-		return data.at(id, label);
-	}
+    }
 
-	public String iat(int i, int j) {
-		return data.iat(i, j);
-	}
+    public String at(int id, String label) {
+        return data.at(id, label);
+    }
 
-	public int columns() {
-		return data.columns();
-	}
+    public String iat(int i, int j) {
+        return data.iat(i, j);
+    }
 
-	public int size() {
-		return data.size();
-	}
+    public int columns() {
+        return data.columns();
+    }
 
-	public ArrayList<String> sort(String label, Comparator<String> c) {
-		return data.sort(label,c);
-	}
+    public int size() {
+        return data.size();
+    }
 
-	public Data query(String label, Predicate<String> func) {
-		return data.query(label,func);
-	}
+    public ArrayList<String> sort(String label, Comparator<String> c) {
+        return data.sort(label, c);
+    }
 
-	public Double max(String label) {
-		return data.max(label);
-	}
+    public Data query(String label, Predicate<String> func) {
+        return data.query(label, func);
+    }
 
-	public Double min(String label) {
-		return data.min(label);
-	}
+    public Double max(String label) {
+        return data.max(label);
+    }
 
-	public Double average(String label) {
-		return data.average(label);
-	}
+    public Double min(String label) {
+        return data.min(label);
+    }
 
-	public Double sum(String label) {
-		return data.sum(label);
-	}
+    public Double average(String label) {
+        return data.average(label);
+    }
 
-	public LinkedList<ArrayList<String>> getContent() {
-		return data.getContent();
-	}
+    public Double sum(String label) {
+        return data.sum(label);
+    }
 
-	public LinkedList<String> getLabelList() {
-		return data.getLabelList();
-	}
+    public LinkedList<ArrayList<String>> getContent() {
+        return data.getContent();
+    }
 
-	public ArrayList<String> getColumn(String label) {
-		return data.getColumn(label);
-	}
+    public LinkedList<String> getLabelList() {
+        return data.getLabelList();
+    }
 
-	public void accept(Visitor v) {}
+    public ArrayList<String> getColumn(String label) {
+        return data.getColumn(label);
+    }
 
-	public Iterator<ArrayList<String>> iterator() {
-		return data.iterator();
-	}
+    public void accept(Visitor v) {
+    }
 
-	@Override
-	public String toString() {
-		return data.toString();
-	}
+    public Iterator<ArrayList<String>> iterator() {
+        return data.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return data.toString();
+    }
 }

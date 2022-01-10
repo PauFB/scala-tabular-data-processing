@@ -1,4 +1,6 @@
-package composite
+package test
+
+import composite.{DirectoryScala, FileScala}
 
 object CompositeScalaTest extends scala.App {
 

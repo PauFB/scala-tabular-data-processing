@@ -3,7 +3,8 @@ package observer;
 import factory.DataFrame;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Interceptor implements java.lang.reflect.InvocationHandler {
 
@@ -28,4 +29,5 @@ public class Interceptor implements java.lang.reflect.InvocationHandler {
         return method.invoke(this.subject, args);
 
     }
+
 }

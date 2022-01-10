@@ -1,4 +1,4 @@
-package recursion
+package test
 
 import composite.FileScala
 import dataframe.ScalaDataFrame
@@ -18,7 +18,6 @@ object RecursionTest extends scala.App {
   println("tail recursion: " + df.listFilterMapTail(isGreaterThanFour, roundDoubleValue, df.getColumn("Value"), Nil))
   println()
 
-
   def StringContainsHello(value: String): Boolean =
     if (value.contains("Hello")) true
     else false
@@ -28,6 +27,5 @@ object RecursionTest extends scala.App {
   println("--- Replace String ---")
   println("stack recursion: " + df.listFilterMapStack(StringContainsHello, replaceStringPattern, df.getColumn("Sentence")))
   println("tail recursion: " + df.listFilterMapTail(StringContainsHello, replaceStringPattern, df.getColumn("Sentence"), Nil))
-
 
 }

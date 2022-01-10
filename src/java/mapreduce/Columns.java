@@ -10,4 +10,5 @@ public class Columns implements Function<DataFrame, Integer> {
     public Integer apply(DataFrame dataFrame) {
         return dataFrame.columns();
     }
+
 }

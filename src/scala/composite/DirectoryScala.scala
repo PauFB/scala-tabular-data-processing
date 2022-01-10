@@ -7,7 +7,7 @@ import visitor.VisitorScala
 import java.io.File
 import java.util
 import java.util.function.Predicate
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 class DirectoryScala() extends ScalaDataFrame {
 
@@ -52,6 +52,18 @@ class DirectoryScala() extends ScalaDataFrame {
 
   def columns(): Int = getLabelList.size()
 
+  def getLabelList: java.util.LinkedList[String] = {
+    val labelList = new util.LinkedList[String]
+    var newLabelList = new util.LinkedList[String]
+    for (child <- children.asScala) { //For every child
+      newLabelList = child.getLabelList
+      for (s <- newLabelList.asScala) {
+        if (!labelList.contains(s)) labelList.add(s) //Add labels that are not in labelList
+      }
+    }
+    labelList
+  }
+
   def size(): Int = {
     var result = 0
     for (child <- children.asScala) {
@@ -60,21 +72,9 @@ class DirectoryScala() extends ScalaDataFrame {
     result
   }
 
-  def getLabelList: java.util.LinkedList[String] = {
-    val labelList = new util.LinkedList[String]
-    var newLabelList = new util.LinkedList[String]
-    for (child <- children.asScala) {         //For every child
-      newLabelList = child.getLabelList
-      for (s <- newLabelList.asScala) {
-        if (!labelList.contains(s)) labelList.add(s)    //Add labels that are not in labelList
-      }
-    }
-    labelList
-  }
-
   def getColumn(label: String): List[String] = {
     val column: List[String] = null
-    for (child <- children.asScala) {         //For every child
+    for (child <- children.asScala) { //For every child
       if (child.getColumn(label) != null) column :+ child.getColumn(label) //Accumulate the elements of the column indexed by label
     }
     column
@@ -83,9 +83,9 @@ class DirectoryScala() extends ScalaDataFrame {
   def filter(label: String, predicate: Predicate[String]): Data = {
     var result: Data = null
     var firstHasBeenAdded = false
-    for (child <- children.asScala) {      //For every child
+    for (child <- children.asScala) { //For every child
       if ((!firstHasBeenAdded) && child.filter(label, predicate) != null) {
-        result = child.filter(label, predicate)     //result takes the first filter
+        result = child.filter(label, predicate) //result takes the first filter
         firstHasBeenAdded = true
       }
       else if (child.filter(label, predicate) != null) for (i <- 0 until result.getContent.size) {
@@ -98,10 +98,10 @@ class DirectoryScala() extends ScalaDataFrame {
   def fileCount(): Int = {
     var result = 0
     for (child <- children.asScala) {
-      if (child.isInstanceOf[FileScala]){   //If child is a File add 1
-        result +=1
+      if (child.isInstanceOf[FileScala]) { //If child is a File add 1
+        result += 1
       } else {
-        result += child.fileCount()         //If child is a Directory add its number of files
+        result += child.fileCount() //If child is a Directory add its number of files
       }
     }
     result
@@ -110,7 +110,7 @@ class DirectoryScala() extends ScalaDataFrame {
   def directoryCount(): Int = {
     var result = 0
     for (child <- children.asScala)
-      if (child.isInstanceOf[DirectoryScala]) {   //If child is a Directory add 1 and its number of directories
+      if (child.isInstanceOf[DirectoryScala]) { //If child is a Directory add 1 and its number of directories
         result += 1
         result += child.directoryCount()
       }
@@ -121,18 +121,18 @@ class DirectoryScala() extends ScalaDataFrame {
 
   override def listFilterMapStack[A, B](predicate: A => Boolean, method: A => B, list: List[A]): List[B] = list match {
     case Nil => Nil
-    case front::rest => if (predicate(front))     //If the front fulfil the condition
-      method(front) :: listFilterMapStack(predicate, method, rest)  //return the result of the applied operation to it added to the recursive call of the rest
+    case front :: rest => if (predicate(front)) //If the front fulfil the condition
+      method(front) :: listFilterMapStack(predicate, method, rest) //return the result of the applied operation to it added to the recursive call of the rest
     else
-      listFilterMapStack(predicate, method, rest)   //If not return the recursive call of the rest
+      listFilterMapStack(predicate, method, rest) //If not return the recursive call of the rest
   }
 
   override def listFilterMapTail[A, B](predicate: A => Boolean, method: A => B, list: List[A], accumulator: List[B]): List[B] = list match {
     case Nil => accumulator
-    case front::rest => if (predicate(front))     //If the front fulfil the condition
-      listFilterMapTail(predicate, method, rest, accumulator :+ method(front))  //return the recursive call of the rest adding the result of the applied operation to it
+    case front :: rest => if (predicate(front)) //If the front fulfil the condition
+      listFilterMapTail(predicate, method, rest, accumulator :+ method(front)) //return the recursive call of the rest adding the result of the applied operation to it
     else
-      listFilterMapTail(predicate, method, rest, accumulator)   //If not return the recursive call of the rest
+      listFilterMapTail(predicate, method, rest, accumulator) //If not return the recursive call of the rest
   }
 
 }

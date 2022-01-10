@@ -1,6 +1,7 @@
 package mapreduce;
 
-import factory.*;
+import factory.Data;
+import factory.DataFrame;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -17,6 +18,7 @@ public class Query implements Function<DataFrame, Data> {
 
     @Override
     public Data apply(DataFrame dataFrame) {
-        return dataFrame.query(label,predicate);
+        return dataFrame.query(label, predicate);
     }
+
 }

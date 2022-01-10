@@ -1,38 +1,40 @@
 package factory;
 
-import visitor.*;
+import visitor.Visitor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.function.Predicate;
 
 public interface DataFrame extends Iterable<ArrayList<String>> {
-	
-	String at(int id, String label);
-	
-	String iat(int i, int j);
-	
-	int columns();
-	
-	int size();
 
-	ArrayList<String> sort(String label, Comparator<String> c);
+    String at(int id, String label);
 
-	Data query(String label, Predicate<String> predicate);
+    String iat(int i, int j);
 
-	Double max(String label);
+    int columns();
 
-	Double min(String label);
+    int size();
 
-	Double average(String label);
+    ArrayList<String> sort(String label, Comparator<String> c);
 
-	Double sum(String label);
+    Data query(String label, Predicate<String> predicate);
 
-	LinkedList<ArrayList<String>> getContent();
+    Double max(String label);
 
-	LinkedList<String> getLabelList();
+    Double min(String label);
 
-	ArrayList<String> getColumn(String label);
+    Double average(String label);
 
-	void accept(Visitor v);
+    Double sum(String label);
+
+    LinkedList<ArrayList<String>> getContent();
+
+    LinkedList<String> getLabelList();
+
+    ArrayList<String> getColumn(String label);
+
+    void accept(Visitor v);
 
 }

@@ -7,7 +7,7 @@ public class MaximumVisitor implements Visitor {
     private final String label;
     private Double result;
 
-    public MaximumVisitor(String label){
+    public MaximumVisitor(String label) {
         this.label = label;
     }
 

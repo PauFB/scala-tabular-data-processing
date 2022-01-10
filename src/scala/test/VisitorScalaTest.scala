@@ -1,10 +1,11 @@
-package visitor
+package test
 
 import composite.{DirectoryScala, FileScala}
 import dataframe.ScalaDataFrame
+import visitor.{CounterVisitor, FilterVisitor, VisitorScala}
 
 import java.util
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 object VisitorScalaTest extends scala.App {
 

@@ -29,7 +29,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/src/java/json-simple-1.1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/json-simple-1.1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -38,7 +38,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/src/java/univocity-parsers-2.9.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/univocity-parsers-2.9.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -6,7 +6,7 @@ import visitor.VisitorScala
 
 import java.util
 import java.util.function.Predicate
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 class FileScala(filePath: String) extends ScalaDataFrame {
 
@@ -37,7 +37,7 @@ class FileScala(filePath: String) extends ScalaDataFrame {
 
   override def listFilterMapStack[A, B](predicate: A => Boolean, method: A => B, list: List[A]): List[B] = list match {
     case Nil => Nil
-    case front::rest => if (predicate(front))
+    case front :: rest => if (predicate(front))
       method(front) :: listFilterMapStack(predicate, method, rest)
     else
       listFilterMapStack(predicate, method, rest)
@@ -45,7 +45,7 @@ class FileScala(filePath: String) extends ScalaDataFrame {
 
   override def listFilterMapTail[A, B](predicate: A => Boolean, method: A => B, list: List[A], accumulator: List[B]): List[B] = list match {
     case Nil => accumulator
-    case front::rest => if (predicate(front))
+    case front :: rest => if (predicate(front))
       listFilterMapTail(predicate, method, rest, accumulator :+ method(front))
     else
       listFilterMapTail(predicate, method, rest, accumulator)
