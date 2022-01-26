@@ -91,7 +91,7 @@ public class DirectoryData implements DataFrame {
     }
 
     public Data query(String label, Predicate<String> predicate) {
-        Data result = null;
+        Data result = new Data(getLabelList(), new LinkedList<>());
         boolean firstHasBeenAdded = false;
         for (DataFrame child : children) {                      // For every child
             if (!firstHasBeenAdded) {
@@ -107,64 +107,6 @@ public class DirectoryData implements DataFrame {
             }
         }
         return result;
-    }
-
-    public Double max(String label) {
-        double maxValue = Double.MIN_VALUE;
-        for (DataFrame child : children) {
-            if (child.max(label) != null) {
-                maxValue = Math.max(child.max(label), maxValue);
-            }
-        }
-        if (maxValue != Double.MIN_VALUE) {
-            return maxValue;
-        }
-        return null;
-    }
-
-    public Double min(String label) {
-        double minValue = Double.MAX_VALUE;
-        for (DataFrame child : children) {
-            if (child.min(label) != null) {
-                minValue = Math.min(child.min(label), minValue);
-            }
-        }
-        if (minValue != Double.MAX_VALUE) {
-            return minValue;
-        }
-        return null;
-    }
-
-    public Double average(String label) {
-        ArrayList<String> list;
-        double accumulator = 0.0;
-        int nElements = 0;
-        for (DataFrame child : children) {                      // For every child
-            list = child.getColumn(label);
-            if (list != null) {
-                for (String value : list) {
-                    accumulator += Integer.parseInt(value);     // Accumulate the elements of the column indexed by label
-                    nElements++;
-                }
-            }
-        }
-        if (nElements != 0) {
-            return accumulator / nElements;
-        }
-        return null;
-    }
-
-    public Double sum(String label) {
-        Double sum = 0.0;
-        for (DataFrame child : children) {
-            if (child.sum(label) != null) {
-                sum += child.sum(label);
-            }
-        }
-        if (sum != 0) {
-            return sum;
-        }
-        return null;
     }
 
     public LinkedList<ArrayList<String>> getContent() {

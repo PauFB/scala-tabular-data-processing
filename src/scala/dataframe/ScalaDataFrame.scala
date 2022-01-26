@@ -15,15 +15,9 @@ trait ScalaDataFrame {
 
   def size(): Int
 
-  def filter(label: String, predicate: Predicate[String]): Data
-
   def getLabelList: java.util.LinkedList[String]
 
   def getColumn(label: String): List[String]
-
-  def fileCount(): Int
-
-  def directoryCount(): Int
 
   def accept(visitor: VisitorScala): Unit
 

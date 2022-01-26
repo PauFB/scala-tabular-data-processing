@@ -1,6 +1,7 @@
 package test
 
 import composite.{DirectoryScala, FileScala}
+import factory.Data
 import dataframe.ScalaDataFrame
 import visitor.{CounterVisitor, FilterVisitor, VisitorScala}
 
@@ -22,19 +23,22 @@ object VisitorScalaTest extends scala.App {
   var v: VisitorScala = null
 
   System.out.println("list1 FilterVisitor(SortOrder > 140)")
+  v = new FilterVisitor("SortOrder", x => Integer.parseInt(x) > 140)
   for (d <- list.asScala) {
-    v = new FilterVisitor("SortOrder", x => Integer.parseInt(x) > 140)
+    v.asInstanceOf[FilterVisitor].setResult(new Data(new util.LinkedList[String], new util.LinkedList[util.ArrayList[String]]()))
     d.accept(v)
-    println(v.getResult)
+    v.asInstanceOf[FilterVisitor].getResult
+    println(v.asInstanceOf[FilterVisitor].getResult)
   }
   println()
 
   System.out.println("list2 CounterVisitor()")
+  v = new CounterVisitor()
   for (d <- list2.asScala) {
-    v = new CounterVisitor()
+    v.asInstanceOf[CounterVisitor].setResult(0,0)
     d.accept(v)
     println(d.getName + " DataFrame files = " + v.asInstanceOf[CounterVisitor].fileCount + " and DataFrame dirs = " + v.asInstanceOf[CounterVisitor].directoryCount)
-    println(d.getName + " Dataframe archives = " + v.getResult)
+    //println(d.getName + " Dataframe archives = " + v.asInstanceOf[CounterVisitor].getResult)
     println()
   }
 

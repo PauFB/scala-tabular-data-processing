@@ -34,7 +34,10 @@ public class Data {
     }
 
     public int size() {
-        return content.get(0).size();
+        if (!content.isEmpty()){
+            return content.get(0).size();
+        }
+        return 0;
     }
 
     public ArrayList<String> sort(String label, Comparator<String> c) {
@@ -69,74 +72,6 @@ public class Data {
                 }
 
                 return new Data(labelList, aux);
-            }
-        }
-        return null;
-    }
-
-    public Double max(String label) {
-        double max = Integer.MIN_VALUE;
-        int labelIndex = labelList.indexOf(label);
-
-        if (labelIndex != -1) {
-            try {
-                for (String elem : content.get(labelIndex)) {
-                    max = Math.max(Integer.parseInt(elem), max);
-                }
-                return max;
-            } catch (NumberFormatException e) {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    public Double min(String label) {
-        double min = Integer.MAX_VALUE;
-        int labelIndex = labelList.indexOf(label);
-
-        if (labelIndex != -1) {
-            try {
-                for (String elem : content.get(labelIndex)) {
-                    min = Math.min(Integer.parseInt(elem), min);
-                }
-                return min;
-            } catch (NumberFormatException e) {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    public Double average(String label) {
-        double avg = 0;
-        int labelIndex = labelList.indexOf(label);
-
-        if (labelIndex != -1) {
-            try {
-                for (String elem : content.get(labelIndex)) {
-                    avg += Integer.parseInt(elem);
-                }
-                return avg / content.get(labelIndex).size();
-            } catch (NumberFormatException e) {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    public Double sum(String label) {
-        double sum = 0;
-        int labelIndex = labelList.indexOf(label);
-
-        if (labelIndex != -1) {
-            try {
-                for (String elem : content.get(labelIndex)) {
-                    sum += Integer.parseInt(elem);
-                }
-                return sum;
-            } catch (NumberFormatException e) {
-                return null;
             }
         }
         return null;

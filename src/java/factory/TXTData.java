@@ -62,22 +62,6 @@ public class TXTData implements DataFrame {
         return data.query(label, func);
     }
 
-    public Double max(String label) {
-        return data.max(label);
-    }
-
-    public Double min(String label) {
-        return data.min(label);
-    }
-
-    public Double average(String label) {
-        return data.average(label);
-    }
-
-    public Double sum(String label) {
-        return data.sum(label);
-    }
-
     public LinkedList<ArrayList<String>> getContent() {
         return data.getContent();
     }

@@ -36,7 +36,7 @@ class DirectoryScala() extends ScalaDataFrame {
     else System.out.println("Directory is empty")
   }
 
-  def getChildren: util.List[ScalaDataFrame] = children
+  def getChildren: List[ScalaDataFrame] = this.children
 
   def getName: String = name
 
@@ -50,7 +50,7 @@ class DirectoryScala() extends ScalaDataFrame {
     null
   }
 
-  def columns(): Int = getLabelList.size()
+  def columns(): Int = getLabelList.size
 
   def getLabelList: java.util.LinkedList[String] = {
     val labelList = new util.LinkedList[String]
@@ -78,43 +78,6 @@ class DirectoryScala() extends ScalaDataFrame {
       if (child.getColumn(label) != null) column :+ child.getColumn(label) //Accumulate the elements of the column indexed by label
     }
     column
-  }
-
-  def filter(label: String, predicate: Predicate[String]): Data = {
-    var result: Data = null
-    var firstHasBeenAdded = false
-    for (child <- children.asScala) { //For every child
-      if ((!firstHasBeenAdded) && child.filter(label, predicate) != null) {
-        result = child.filter(label, predicate) //result takes the first filter
-        firstHasBeenAdded = true
-      }
-      else if (child.filter(label, predicate) != null) for (i <- 0 until result.getContent.size) {
-        result.getContent.get(i).addAll(child.filter(label, predicate).getContent.get(i)) //Add to the content of result the content of the rest of filters
-      }
-    }
-    result
-  }
-
-  def fileCount(): Int = {
-    var result = 0
-    for (child <- children.asScala) {
-      if (child.isInstanceOf[FileScala]) { //If child is a File add 1
-        result += 1
-      } else {
-        result += child.fileCount() //If child is a Directory add its number of files
-      }
-    }
-    result
-  }
-
-  def directoryCount(): Int = {
-    var result = 0
-    for (child <- children.asScala)
-      if (child.isInstanceOf[DirectoryScala]) { //If child is a Directory add 1 and its number of directories
-        result += 1
-        result += child.directoryCount()
-      }
-    result
   }
 
   def accept(v: VisitorScala): Unit = v.visit(this)

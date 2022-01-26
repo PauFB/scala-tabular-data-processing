@@ -3,10 +3,7 @@ package composite;
 import factory.*;
 import visitor.Visitor;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class FileData implements DataFrame {
@@ -62,22 +59,6 @@ public class FileData implements DataFrame {
 
     public Data query(String label, Predicate<String> predicate) {
         return data.query(label, predicate);
-    }
-
-    public Double max(String label) {
-        return data.max(label);
-    }
-
-    public Double min(String label) {
-        return data.min(label);
-    }
-
-    public Double average(String label) {
-        return data.average(label);
-    }
-
-    public Double sum(String label) {
-        return data.sum(label);
     }
 
     public LinkedList<ArrayList<String>> getContent() {

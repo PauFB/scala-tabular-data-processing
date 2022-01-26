@@ -1,18 +1,60 @@
 package visitor
 
+import composite.{DirectoryScala, FileScala}
 import dataframe.ScalaDataFrame
 import factory.Data
 
+import java.util
+import java.util.{ArrayList, LinkedList}
 import java.util.function.Predicate
 
-class FilterVisitor(label: String, predicate: Predicate[String]) extends VisitorScala {
+class FilterVisitor(label: String, predicate: String => Boolean) extends VisitorScala {
 
-  var result: Data = null
+  var result: Data = new Data(new util.LinkedList[String], new util.LinkedList[util.ArrayList[String]])
 
-  override def visit(dataFrame: ScalaDataFrame): Unit = {
-    this.result = dataFrame.filter(this.label, this.predicate)
+  override def visit(f: FileScala): Unit = {
+    val col: Int = f.getLabelList.indexOf(label)
+    var aux2: Data = null
+    val aux3: util.LinkedList[java.util.ArrayList[String]] = new java.util.LinkedList[util.ArrayList[String]]
+    if (result.getContent.isEmpty) {
+      for (k <- 0 until f.columns()) {
+        aux3.add(new util.ArrayList[String])
+      }
+      result = new Data(f.getLabelList, aux3)
+    }
+
+    if (col != -1) {
+      val filtered_column: List[String] = f.getContent(col).filter(predicate) // Filter the column indexed by label
+      if (filtered_column.nonEmpty) {
+        val aux: util.LinkedList[java.util.ArrayList[String]] = new java.util.LinkedList[util.ArrayList[String]]
+        for (k <- 0 until f.columns()) {
+          aux.add(new util.ArrayList[String])
+        }
+        for (j <- 0 until f.size()) { // For every line
+          if (filtered_column.contains(f.getContent(col)(j))) { // If an element in the original column also exists in filtered_column
+            for (i <- 0 until f.columns()) {
+              aux.get(i).add(f.getContent(i)(j))  // Add it to aux
+            }
+          }
+        }
+        aux2 = new Data(f.getLabelList, aux)
+        for (i <- 0 until aux2.getContent.size) {
+          result.getContent.get(i).addAll(aux2.getContent.get(i)) //Add to the content of result the content of the rest of filters
+        }
+      }
+    }
   }
 
-  override def getResult[T]: T = result.asInstanceOf[T]
+  override def visit(d: DirectoryScala): Unit = {
+    for (child <- d.getChildren) { //For every child
+      child.accept(this)
+    }
+  }
+
+  def getResult: Data = result
+
+  def setResult(data: Data): Unit = {
+    result = data
+  }
 
 }

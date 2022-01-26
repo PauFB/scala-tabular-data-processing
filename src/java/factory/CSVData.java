@@ -2,10 +2,7 @@ package factory;
 
 import visitor.Visitor;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -75,22 +72,6 @@ public class CSVData implements DataFrame {
 
     public Data query(String label, Predicate<String> func) {
         return data.query(label, func);
-    }
-
-    public Double max(String label) {
-        return data.max(label);
-    }
-
-    public Double min(String label) {
-        return data.min(label);
-    }
-
-    public Double average(String label) {
-        return data.average(label);
-    }
-
-    public Double sum(String label) {
-        return data.sum(label);
     }
 
     public LinkedList<ArrayList<String>> getContent() {
