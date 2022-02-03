@@ -61,7 +61,7 @@ public class DirectoryData implements DataFrame {
 
     public String iat(int i, int j) {
         for (DataFrame child : children) {
-            if (child.size() - 1 < i) {
+            if (i > child.size() - 1) {
                 i -= child.size();
             } else {
                 return child.iat(i, j);
@@ -92,14 +92,8 @@ public class DirectoryData implements DataFrame {
 
     public Data query(String label, Predicate<String> predicate) {
         Data result = new Data(getLabelList(), new LinkedList<>());
-        boolean firstHasBeenAdded = false;
         for (DataFrame child : children) {                      // For every child
-            if (!firstHasBeenAdded) {
-                if (child.query(label, predicate) != null) {
-                    result = child.query(label, predicate);     // result points to the first query result
-                    firstHasBeenAdded = true;
-                }
-            } else if (child.query(label, predicate) != null) {
+            if (!child.query(label, predicate).getContent().isEmpty()) {
                 for (int i = 0; i < result.getContent().size(); i++) {
                     // Add each column of each query() result to the corresponding column of the accumulated (directory) result
                     result.getContent().get(i).addAll(child.query(label, predicate).getContent().get(i));

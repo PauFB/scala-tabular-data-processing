@@ -12,13 +12,11 @@ import scala.jdk.CollectionConverters.*
 class DirectoryScala() extends ScalaDataFrame {
 
   var name: String = ""
-  //var children: util.List[ScalaDataFrame] = new util.LinkedList[ScalaDataFrame]()
   var children: List[ScalaDataFrame] = List[ScalaDataFrame]()
 
   def this(directoryPath: String) = {
     this()
     name = directoryPath
-    //children = new util.LinkedList[ScalaDataFrame]
     children = List[ScalaDataFrame]()
 
     var f: FileScala = null
@@ -33,7 +31,7 @@ class DirectoryScala() extends ScalaDataFrame {
         }
         else {
           d = new DirectoryScala(file.getAbsolutePath)
-          if (!d.getChildren.isEmpty) children = children :+ d
+          if (d.getChildren.nonEmpty) children = children :+ d
         }
       }
     else System.out.println("Directory is empty")
@@ -45,7 +43,7 @@ class DirectoryScala() extends ScalaDataFrame {
 
   def at(id: Int, label: String): String = {
     var aux = id
-    for (child <- this.children) {
+    for (child <- children) {
       if (aux > child.size() - 1)
         aux = aux - child.size()
       else return child.at(aux, label)
@@ -55,27 +53,20 @@ class DirectoryScala() extends ScalaDataFrame {
 
   def columns(): Int = getLabelList.size
 
-  /*
-  def getLabelList: java.util.LinkedList[String] = {
-    val labelList = new util.LinkedList[String]
-    var newLabelList = new util.LinkedList[String]
-    for (child <- children.asScala) { //For every child
-      newLabelList = child.getLabelList
-      for (s <- newLabelList.asScala) {
-        if (!labelList.contains(s)) labelList.add(s) //Add labels that are not in labelList
-      }
+  def size(): Int = {
+    var result = 0
+    for (child <- children) {
+      result = result + child.size()
     }
-    labelList
+    result
   }
-  */
 
   def getLabelList: util.LinkedList[String] = {
-    var labelList = new util.LinkedList[String]()
+    val labelList = new util.LinkedList[String]()
     var newLabelList = new java.util.LinkedList[String]()
-    for (child <- this.children) { //For every child
+    for (child <- children) { //For every child
       newLabelList = child.getLabelList
       for (s <- newLabelList.asScala) {
-        //if (!labelList.contains(s)) labelList.add(s) //Add labels that are not in labelList
         if (!labelList.contains(s))
           labelList.add(s) // Add labels that are not in labelList
       }
@@ -83,17 +74,9 @@ class DirectoryScala() extends ScalaDataFrame {
     labelList
   }
 
-  def size(): Int = {
-    var result = 0
-    for (child <- this.children) {
-      result = result + child.size()
-    }
-    result
-  }
-
   def getColumn(label: String): List[String] = {
     val column: List[String] = null
-    for (child <- this.children) { // For every child
+    for (child <- children) { // For every child
       if (child.getColumn(label) != null) column :+ child.getColumn(label) //Accumulate the elements of the column indexed by label
     }
     column

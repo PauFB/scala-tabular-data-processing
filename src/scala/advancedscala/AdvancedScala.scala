@@ -2,7 +2,6 @@ package advancedscala
 
 import composite.{DirectoryScala, FileScala}
 import dataframe.ScalaDataFrame
-import test.RecursionTest.{isGreaterThanFour, roundDoubleValue}
 
 trait Talkable {
   def talk(): String = ""
@@ -53,6 +52,12 @@ object AdvancedScala extends scala.App {
   println()
 
   // --------------------- Partial parametrization ---------------------
+
+  def isGreaterThanFour(value: String): Boolean =
+    if (value.toDouble > 4) true
+    else false
+
+  def roundDoubleValue(value: String): Int = Math.round(value.toDouble).toInt
 
   println("--- Round Double to Int ---")
   val df: ScalaDataFrame = new FileScala("src/resources/recursion.csv")

@@ -17,15 +17,15 @@ public class AverageVisitor implements Visitor {
 
 
     public void visit(FileData f) {
-        double avg = 0;
+        double sum = 0;
         int labelIndex = f.getLabelList().indexOf(label);
 
         if (labelIndex != -1) {
             try {
                 for (String elem : f.getContent().get(labelIndex)) {
-                    avg += Double.parseDouble(elem);
+                    sum += Double.parseDouble(elem);
                 }
-                result = avg / f.getContent().get(labelIndex).size();
+                result = sum / f.getContent().get(labelIndex).size();
             } catch (NumberFormatException e) {
                 result = null;
             }

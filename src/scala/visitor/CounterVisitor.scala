@@ -19,8 +19,6 @@ class CounterVisitor extends VisitorScala {
     }
   }
 
-  //def getResult[T]: T = (fileCount + directoryCount).asInstanceOf[T]
-
   def setResult(fileCount: Int, directoryCount: Int): Unit = {
     this.fileCount = fileCount
     this.directoryCount = directoryCount

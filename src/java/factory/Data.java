@@ -74,7 +74,7 @@ public class Data {
                 return new Data(labelList, aux);
             }
         }
-        return null;
+        return new Data(labelList, new LinkedList<>());
     }
 
     public LinkedList<ArrayList<String>> getContent() {
